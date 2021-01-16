@@ -2,6 +2,18 @@
     "scope": "source.lua",
     "completions": [
         {
+            "trigger": "readfile",
+            "kind": "function",
+            "details": "Read and return data from passed file.",
+            "contents": "readfile(${1:filename})"
+        },
+        {
+            "trigger": "writefile",
+            "kind": "function",
+            "details": "Writes a value to the file with name.",
+            "contents": "writefile(${1:filename}, ${2:buffer})"
+        },
+        {
             "trigger": "bit.arshift",
             "kind": "function",
             "details": "Returns the bitwise arithmetic right-shift of its first argument by the number of bits given by the second argument.\nArithmetic right-shift treats the most-significant bit as a sign bit and replicates it.\nOnly the lower 5 bits of the shift count are used (reduces to the range [0..31]).",
@@ -140,6 +152,12 @@
             "contents": "client.find_signature(${1:module_name}, ${2:pattern})"
         },
         {
+            "trigger": "client.get_model_name",
+            "kind": "function",
+            "details": "Returns model name, or nil on failure.",
+            "contents": "client.get_model_name(${1:model_index})"
+        },
+        {
             "trigger": "client.key_state",
             "kind": "function",
             "details": "Returns true if the key is pressed, or nil on failure",
@@ -168,6 +186,12 @@
             "kind": "function",
             "details": "Returns a random integer between minimum and maximum.",
             "contents": "client.random_int(${1:minimum}, ${2:maximum})"
+        },
+        {
+            "trigger": "client.register_esp_flag",
+            "kind": "function",
+            "details": "Returns the x, y, z coordinates of the entity. Only works for non-dormant entities, except for players, where it will return the dormant esp origin",
+            "contents": "client.register_esp_flag(${1:flagname}, ${2:r}, ${3:g}, ${4:b}, ${5:callback_function})"
         },
         {
             "trigger": "client.reload_active_scripts",
@@ -344,6 +368,12 @@
             "contents": "entity.get_classname(${1:ent})"
         },
         {
+            "trigger": "entity.get_esp_data",
+            "kind": "function",
+            "details": "Returns a table containing alpha, health, and weapon_id, or nil on failure.",
+            "contents": "entity.get_esp_data(${1:ent})"
+        },
+        {
             "trigger": "entity.get_game_rules",
             "kind": "function",
             "details": "Returns entity index of CCSGameRulesProxy instance, or nil if none exists.",
@@ -506,6 +536,18 @@
             "contents": "globals.tickinterval()"
         },
         {
+            "trigger": "json.parse",
+            "kind": "function",
+            "details": "Will deserialise any UTF-8 JSON string into a Lua value or table.",
+            "contents": "json.parse(${1:json_text})"
+        },
+        {
+            "trigger": "json.stringify",
+            "kind": "function",
+            "details": "Will serialise a Lua value into a string containing the JSON representation.",
+            "contents": "json.stringify(${1:data})"
+        },
+        {
             "trigger": "material_object:alpha_modulate",
             "kind": "function",
             "details": "Overrides the alpha of the material object it's called on. Doesn't work with some materials",
@@ -588,6 +630,30 @@
             "kind": "function",
             "details": "Sets the value of the shader param of the material",
             "contents": "material_object:set_shader_param(${1:shader_param}, ${2:value})"
+        },
+        {
+            "trigger": "panorama.loadstring",
+            "kind": "function",
+            "details": "This function behaves similar to lua's loadstring but executes JS code instead. It compiles the given chunk string of JS and returns a function to call it. Avoid generating JS code on-the-fly, instead return a table of functions, which you can then call in Lua. Arguments can be passed from Lua to JS functions.",
+            "contents": "panorama.loadstring(${1:js_code}, ${2:root_panel})"
+        },
+        {
+            "trigger": "panorama.open",
+            "kind": "function",
+            "details": "Returns a JS context table that lets you call vanilla JS and panorama functions. Avoid calling this in event callbacks, instead, call it once and store its return value in a function.",
+            "contents": "panorama.open(${1:root_panel})"
+        },
+        {
+            "trigger": "plist.get",
+            "kind": "function",
+            "details": "Get the previously stored by plist.set variable at any entity.",
+            "contents": "plist.get(${1:entindex}, ${2:variable_name})"
+        },
+        {
+            "trigger": "plist.set",
+            "kind": "function",
+            "details": "Set the special variable to any entity.",
+            "contents": "plist.set(${1:entindex}, ${2:variable_name}, ${3:value})"
         },
         {
             "trigger": "renderer.circle",
@@ -779,7 +845,7 @@
             "trigger": "ui.new_textbox",
             "kind": "function",
             "details": "Throws an error on failure. Returns a special value that can be used with ui.get",
-            "contents": "ui.new_textbox(${1:tab}, ${2:container})"
+            "contents": "ui.new_textbox(${1:tab}, ${2:container}, ${3:name})"
         },
         {
             "trigger": "ui.reference",
@@ -804,6 +870,12 @@
             "kind": "function",
             "details": "Sets the visibility of the menu item",
             "contents": "ui.set_visible(${1:item}, ${2:visible})"
+        },
+        {
+            "trigger": "ui.update",
+            "kind": "function",
+            "details": "Change current values for e.g. in listbox to passed.",
+            "contents": "ui.update(${1:item}, ${2:...})"
         }
     ]
 }

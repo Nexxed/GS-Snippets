@@ -1,4 +1,12 @@
 'source.lua':
+	readfile:
+		prefix: 'readfile'
+		description: 'Read and return data from passed file.'
+		body: 'readfile(filename)'
+	writefile:
+		prefix: 'writefile'
+		description: 'Writes a value to the file with name.'
+		body: 'writefile(filename, buffer)'
 	'bit.arshift':
 		prefix: 'bit.arshift'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/bit#bit-arshift'
@@ -132,6 +140,11 @@
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/client#client-find_signature'
 		description: 'Finds the specified pattern and returns a pointer to it, or nil if not found.'
 		body: 'client.find_signature(module_name, pattern)'
+	'client.get_model_name':
+		prefix: 'client.get_model_name'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/client#client-get_model_name'
+		description: 'Returns model name, or nil on failure.'
+		body: 'client.get_model_name(model_index)'
 	'client.key_state':
 		prefix: 'client.key_state'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/client#client-key_state'
@@ -157,6 +170,11 @@
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/client#client-random_int'
 		description: 'Returns a random integer between minimum and maximum.'
 		body: 'client.random_int(minimum, maximum)'
+	'client.register_esp_flag':
+		prefix: 'client.register_esp_flag'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/client#client-register_esp_flag'
+		description: 'Returns the x, y, z coordinates of the entity. Only works for non-dormant entities, except for players, where it will return the dormant esp origin'
+		body: 'client.register_esp_flag(flagname, r, g, b, callback_function)'
 	'client.reload_active_scripts':
 		prefix: 'client.reload_active_scripts'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/client#client-reload_active_scripts'
@@ -302,6 +320,11 @@
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/entity#entity-get_classname'
 		description: "Returns the name of the entity's class, or nil on failure."
 		body: 'entity.get_classname(ent)'
+	'entity.get_esp_data':
+		prefix: 'entity.get_esp_data'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/entity#entity-get_esp_data'
+		description: 'Returns a table containing alpha, health, and weapon_id, or nil on failure.'
+		body: 'entity.get_esp_data(ent)'
 	'entity.get_game_rules':
 		prefix: 'entity.get_game_rules'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/entity#entity-get_game_rules'
@@ -437,6 +460,16 @@
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/globals#globals-tickinterval'
 		description: 'Returns the time elapsed in one game tick in seconds.'
 		body: 'globals.tickinterval()'
+	'json.parse':
+		prefix: 'json.parse'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/json#json-parse'
+		description: 'Will deserialise any UTF-8 JSON string into a Lua value or table.'
+		body: 'json.parse(json_text)'
+	'json.stringify':
+		prefix: 'json.stringify'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/json#json-stringify'
+		description: 'Will serialise a Lua value into a string containing the JSON representation.'
+		body: 'json.stringify(data)'
 	'material_object:alpha_modulate':
 		prefix: 'material_object:alpha_modulate'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/material_object#material_object-alpha_modulate'
@@ -507,6 +540,26 @@
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/material_object#material_object-set_shader_param'
 		description: 'Sets the value of the shader param of the material'
 		body: 'material_object:set_shader_param(shader_param, value)'
+	'panorama.loadstring':
+		prefix: 'panorama.loadstring'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/panorama#panorama-loadstring'
+		description: "This function behaves similar to lua's loadstring but executes JS code instead. It compiles the given chunk string of JS and returns a function to call it. Avoid generating JS code on-the-fly, instead return a table of functions, which you can then call in Lua. Arguments can be passed from Lua to JS functions."
+		body: 'panorama.loadstring(js_code, root_panel)'
+	'panorama.open':
+		prefix: 'panorama.open'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/panorama#panorama-open'
+		description: 'Returns a JS context table that lets you call vanilla JS and panorama functions. Avoid calling this in event callbacks, instead, call it once and store its return value in a function.'
+		body: 'panorama.open(root_panel)'
+	'plist.get':
+		prefix: 'plist.get'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/plist#plist-get'
+		description: 'Get the previously stored by plist.set variable at any entity.'
+		body: 'plist.get(entindex, variable_name)'
+	'plist.set':
+		prefix: 'plist.set'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/plist#plist-set'
+		description: 'Set the special variable to any entity.'
+		body: 'plist.set(entindex, variable_name, value)'
 	'renderer.circle':
 		prefix: 'renderer.circle'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/renderer#renderer-circle'
@@ -666,7 +719,7 @@
 		prefix: 'ui.new_textbox'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/ui#ui-new_textbox'
 		description: 'Throws an error on failure. Returns a special value that can be used with ui.get'
-		body: 'ui.new_textbox(tab, container)'
+		body: 'ui.new_textbox(tab, container, name)'
 	'ui.reference':
 		prefix: 'ui.reference'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/ui#ui-reference'
@@ -687,3 +740,8 @@
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/ui#ui-set_visible'
 		description: 'Sets the visibility of the menu item'
 		body: 'ui.set_visible(item, visible)'
+	'ui.update':
+		prefix: 'ui.update'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/ui#ui-update'
+		description: 'Change current values for e.g. in listbox to passed.'
+		body: 'ui.update(item, ...)'
