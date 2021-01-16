@@ -196,7 +196,7 @@
 		prefix: 'client.trace_bullet'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/client#client-trace_bullet'
 		description: 'Returns entindex, damage. Entindex is nil when no player is hit.'
-		body: 'client.trace_bullet(from_player, from_x, from_y, from_z, to_x, to_y, to_z)'
+		body: 'client.trace_bullet(from_player, from_x, from_y, from_z, to_x, to_y, to_z, skip_players)'
 	'client.trace_line':
 		prefix: 'client.trace_line'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/client#client-trace_line'
@@ -312,6 +312,11 @@
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/entity#entity-get_local_player'
 		description: 'Returns the entity index for the local player, or nil on failure.'
 		body: 'entity.get_local_player()'
+	'entity.get_origin':
+		prefix: 'entity.get_origin'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/entity#entity-get_origin'
+		description: 'Returns the x, y, z coordinates of the entity. Only works for non-dormant entities, except for players, where it will return the dormant esp origin'
+		body: 'entity.get_origin(ent)'
 	'entity.get_player_name':
 		prefix: 'entity.get_player_name'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/entity#entity-get_player_name'
@@ -355,7 +360,7 @@
 	'entity.is_dormant':
 		prefix: 'entity.is_dormant'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/entity#entity-is_dormant'
-		description: 'Returns true if the player is dormant.'
+		description: 'Returns true if the entity is dormant.'
 		body: 'entity.is_dormant(ent)'
 	'entity.is_enemy':
 		prefix: 'entity.is_enemy'
@@ -476,7 +481,7 @@
 		prefix: 'materialsystem.get_model_materials'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/materialsystem#materialsystem-get_model_materials'
 		description: 'Returns all material objects for a specified entity.'
-		body: 'materialsystem.get_model_materials(entindex)'
+		body: 'materialsystem.get_model_materials(ent)'
 	'material_object:get_shader_param':
 		prefix: 'material_object:get_shader_param'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/material_object#material_object-get_shader_param'
@@ -486,7 +491,7 @@
 		prefix: 'materialsystem.override_material'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/materialsystem#materialsystem-override_material'
 		description: 'Overrides all of a material properties with another material.'
-		body: 'materialsystem.override_material(entindex)'
+		body: 'materialsystem.override_material(ent)'
 	'material_object:reload':
 		prefix: 'material_object:reload'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/material_object#material_object-reload'
@@ -530,13 +535,18 @@
 	'renderer.load_jpg':
 		prefix: 'renderer.load_jpg'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/renderer#renderer-load_jpg'
-		description: 'Returns a texture ID that can be used with renderer.texture, or nil on failure'
-		body: 'renderer.load_jpg(contents)'
+		description: 'Loads a texture from raw JPG contents (with file header). Returns a texture ID that can be used with renderer.texture, or nil on failure'
+		body: 'renderer.load_jpg(contents, width, height)'
 	'renderer.load_png':
 		prefix: 'renderer.load_png'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/renderer#renderer-load_png'
-		description: 'Returns a texture ID that can be used with renderer.texture, or nil on failure'
-		body: 'renderer.load_png(contents)'
+		description: 'Loads a texture from raw png contents (with file header). Returns a texture ID that can be used with renderer.texture, or nil on failure'
+		body: 'renderer.load_png(contents, width, height)'
+	'renderer.load_rgba':
+		prefix: 'renderer.load_rgba'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/renderer#renderer-load_rgba'
+		description: 'Loads a texture from a RGBA buffer. Returns a texture ID that can be used with renderer.texture, or nil on failure'
+		body: 'renderer.load_rgba(contents, width, height)'
 	'renderer.load_svg':
 		prefix: 'renderer.load_svg'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/renderer#renderer-load_svg'
@@ -560,8 +570,8 @@
 	'renderer.texture':
 		prefix: 'renderer.texture'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/renderer#renderer-texture'
-		description: 'Draws a texture from the texture id created from load_png, load_jpg or load_svg'
-		body: 'renderer.texture(id, x, y, w, h, r, g, b, a)'
+		description: 'Draws a texture from the texture id created from load_rgba, load_png, load_jpg or load_svg'
+		body: 'renderer.texture(id, x, y, w, h, r, g, b, a, flags)'
 	'renderer.triangle':
 		prefix: 'renderer.triangle'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/renderer#renderer-triangle'
@@ -582,6 +592,16 @@
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/ui#ui-is_menu_open'
 		description: 'Returns true if the menu is currently open.'
 		body: 'ui.is_menu_open()'
+	'ui.menu_position':
+		prefix: 'ui.menu_position'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/ui#ui-menu_position'
+		description: 'Returns the x, y of the menu, even when closed.'
+		body: 'ui.menu_position()'
+	'ui.menu_size':
+		prefix: 'ui.menu_size'
+		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/ui#ui-menu_size'
+		description: 'Returns the width, height of the menu, even when closed.'
+		body: 'ui.menu_size()'
 	'ui.mouse_position':
 		prefix: 'ui.mouse_position'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/ui#ui-mouse_position'

@@ -179,7 +179,7 @@
         {
             "trigger": "client.trace_bullet",
             "description": "Returns entindex, damage. Entindex is nil when no player is hit.",
-            "contents": "client.trace_bullet(${1:from_player}, ${2:from_x}, ${3:from_y}, ${4:from_z}, ${5:to_x}, ${6:to_y}, ${7:to_z})"
+            "contents": "client.trace_bullet(${1:from_player}, ${2:from_x}, ${3:from_y}, ${4:from_z}, ${5:to_x}, ${6:to_y}, ${7:to_z}, ${8:skip_players})"
         },
         {
             "trigger": "client.trace_line",
@@ -297,6 +297,11 @@
             "contents": "entity.get_local_player()"
         },
         {
+            "trigger": "entity.get_origin",
+            "description": "Returns the x, y, z coordinates of the entity. Only works for non-dormant entities, except for players, where it will return the dormant esp origin",
+            "contents": "entity.get_origin(${1:ent})"
+        },
+        {
             "trigger": "entity.get_player_name",
             "description": "Returns the player's name, or the string \"unknown\" on failure.",
             "contents": "entity.get_player_name(${1:ent})"
@@ -338,7 +343,7 @@
         },
         {
             "trigger": "entity.is_dormant",
-            "description": "Returns true if the player is dormant.",
+            "description": "Returns true if the entity is dormant.",
             "contents": "entity.is_dormant(${1:ent})"
         },
         {
@@ -459,7 +464,7 @@
         {
             "trigger": "materialsystem.get_model_materials",
             "description": "Returns all material objects for a specified entity.",
-            "contents": "materialsystem.get_model_materials(${1:entindex})"
+            "contents": "materialsystem.get_model_materials(${1:ent})"
         },
         {
             "trigger": "material_object:get_shader_param",
@@ -469,7 +474,7 @@
         {
             "trigger": "materialsystem.override_material",
             "description": "Overrides all of a material properties with another material.",
-            "contents": "materialsystem.override_material(${1:entindex})"
+            "contents": "materialsystem.override_material(${1:ent})"
         },
         {
             "trigger": "material_object:reload",
@@ -513,13 +518,18 @@
         },
         {
             "trigger": "renderer.load_jpg",
-            "description": "Returns a texture ID that can be used with renderer.texture, or nil on failure",
-            "contents": "renderer.load_jpg(${1:contents})"
+            "description": "Loads a texture from raw JPG contents (with file header). Returns a texture ID that can be used with renderer.texture, or nil on failure",
+            "contents": "renderer.load_jpg(${1:contents}, ${2:width}, ${3:height})"
         },
         {
             "trigger": "renderer.load_png",
-            "description": "Returns a texture ID that can be used with renderer.texture, or nil on failure",
-            "contents": "renderer.load_png(${1:contents})"
+            "description": "Loads a texture from raw png contents (with file header). Returns a texture ID that can be used with renderer.texture, or nil on failure",
+            "contents": "renderer.load_png(${1:contents}, ${2:width}, ${3:height})"
+        },
+        {
+            "trigger": "renderer.load_rgba",
+            "description": "Loads a texture from a RGBA buffer. Returns a texture ID that can be used with renderer.texture, or nil on failure",
+            "contents": "renderer.load_rgba(${1:contents}, ${2:width}, ${3:height})"
         },
         {
             "trigger": "renderer.load_svg",
@@ -543,8 +553,8 @@
         },
         {
             "trigger": "renderer.texture",
-            "description": "Draws a texture from the texture id created from load_png, load_jpg or load_svg",
-            "contents": "renderer.texture(${1:id}, ${2:x}, ${3:y}, ${4:w}, ${5:h}, ${6:r}, ${7:g}, ${8:b}, ${9:a})"
+            "description": "Draws a texture from the texture id created from load_rgba, load_png, load_jpg or load_svg",
+            "contents": "renderer.texture(${1:id}, ${2:x}, ${3:y}, ${4:w}, ${5:h}, ${6:r}, ${7:g}, ${8:b}, ${9:a}, ${10:flags})"
         },
         {
             "trigger": "renderer.triangle",
@@ -565,6 +575,16 @@
             "trigger": "ui.is_menu_open",
             "description": "Returns true if the menu is currently open.",
             "contents": "ui.is_menu_open()"
+        },
+        {
+            "trigger": "ui.menu_position",
+            "description": "Returns the x, y of the menu, even when closed.",
+            "contents": "ui.menu_position()"
+        },
+        {
+            "trigger": "ui.menu_size",
+            "description": "Returns the width, height of the menu, even when closed.",
+            "contents": "ui.menu_size()"
         },
         {
             "trigger": "ui.mouse_position",
