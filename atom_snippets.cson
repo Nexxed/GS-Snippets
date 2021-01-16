@@ -173,7 +173,6 @@
 	'client.register_esp_flag':
 		prefix: 'client.register_esp_flag'
 		descriptionMoreURL: 'https://gamesensical.gitbook.io/docs/developers/globals/client#client-register_esp_flag'
-		description: 'Returns the x, y, z coordinates of the entity. Only works for non-dormant entities, except for players, where it will return the dormant esp origin'
 		body: 'client.register_esp_flag(flagname, r, g, b, callback_function)'
 	'client.reload_active_scripts':
 		prefix: 'client.reload_active_scripts'

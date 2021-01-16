@@ -190,7 +190,6 @@
         {
             "trigger": "client.register_esp_flag",
             "kind": "function",
-            "details": "Returns the x, y, z coordinates of the entity. Only works for non-dormant entities, except for players, where it will return the dormant esp origin",
             "contents": "client.register_esp_flag(${1:flagname}, ${2:r}, ${3:g}, ${4:b}, ${5:callback_function})"
         },
         {
