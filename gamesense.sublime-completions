@@ -2,18 +2,6 @@
     "scope": "source.lua",
     "completions": [
         {
-            "trigger": "readfile",
-            "kind": "function",
-            "details": "Read and return data from passed file.",
-            "contents": "readfile(${1:filename})"
-        },
-        {
-            "trigger": "writefile",
-            "kind": "function",
-            "details": "Writes a value to the file with name.",
-            "contents": "writefile(${1:filename}, ${2:buffer})"
-        },
-        {
             "trigger": "bit.arshift",
             "kind": "function",
             "details": "Returns the bitwise arithmetic right-shift of its first argument by the number of bits given by the second argument.\nArithmetic right-shift treats the most-significant bit as a sign bit and replicates it.\nOnly the lower 5 bits of the shift count are used (reduces to the range [0..31]).",
@@ -23,7 +11,7 @@
             "trigger": "bit.band",
             "kind": "function",
             "details": "Returns the bitwise and of all of its arguments. Note that more than two arguments are allowed.",
-            "contents": "bit.band(${1:x1}, ${2:...})"
+            "contents": "bit.band(${1:x1}, ${2:x2}, ${3:...})"
         },
         {
             "trigger": "bit.bnot",
@@ -35,7 +23,7 @@
             "trigger": "bit.bor",
             "kind": "function",
             "details": "Returns the bitwise or of all of its arguments. Note that more than two arguments are allowed.",
-            "contents": "bit.bor(${1:x1}, ${2:...})"
+            "contents": "bit.bor(${1:x1}, ${2:x2}, ${3:...})"
         },
         {
             "trigger": "bit.bswap",
@@ -130,8 +118,7 @@
         {
             "trigger": "client.error_log",
             "kind": "function",
-            "details": "Logs a message to console in the error format and plays the sound (If Hide from OBS is disabled)",
-            "contents": "client.error_log(${1:msg}, ${2:...})"
+            "contents": "client.error_log(${1:msg})"
         },
         {
             "trigger": "client.exec",
@@ -190,7 +177,8 @@
         {
             "trigger": "client.register_esp_flag",
             "kind": "function",
-            "contents": "client.register_esp_flag(${1:flagname}, ${2:r}, ${3:g}, ${4:b}, ${5:callback_function})"
+            "details": "Requires \"Flags\" is enabled in Player ESP",
+            "contents": "client.register_esp_flag(${1:flag}, ${2:r}, ${3:g}, ${4:b}, ${5:callback})"
         },
         {
             "trigger": "client.reload_active_scripts",
@@ -237,7 +225,7 @@
         {
             "trigger": "client.trace_bullet",
             "kind": "function",
-            "details": "Returns entindex, damage. Entindex is nil when no player is hit.",
+            "details": "Returns entindex, damage. Entindex is nil when no player is hit or if players are skipped.",
             "contents": "client.trace_bullet(${1:from_player}, ${2:from_x}, ${3:from_y}, ${4:from_z}, ${5:to_x}, ${6:to_y}, ${7:to_z}, ${8:skip_players})"
         },
         {
@@ -255,7 +243,7 @@
         {
             "trigger": "client.unset_event_callback",
             "kind": "function",
-            "details": "Removes the event callback for the passed event name and function. Raises an error and prints a message in console upon failure.",
+            "details": "Removes a callback that was previously set using set_event_callback",
             "contents": "client.unset_event_callback(${1:event_name}, ${2:callback})"
         },
         {
@@ -277,10 +265,16 @@
             "contents": "client.visible(${1:x}, ${2:y}, ${3:z})"
         },
         {
+            "trigger": "config.export",
+            "kind": "function",
+            "details": "Returns the current config as a string",
+            "contents": "config.export()"
+        },
+        {
             "trigger": "config.load",
             "kind": "function",
-            "details": "Loads a configuration preset.",
-            "contents": "config.load(${1:name})"
+            "details": "To load the specified config: config.load('Config name here') To load a tab from the specified config: config.load('Config name here', 'Tab name here') To load a container from the specified config: config.load('Config name here', 'Tab name here', 'Container name here')",
+            "contents": "config.load(${1:name}, ${2:tab}, ${3:container})"
         },
         {
             "trigger": "cvar_object:get_float",
@@ -370,7 +364,7 @@
             "trigger": "entity.get_esp_data",
             "kind": "function",
             "details": "Returns a table containing alpha, health, and weapon_id, or nil on failure.",
-            "contents": "entity.get_esp_data(${1:ent})"
+            "contents": "entity.get_esp_data(${1:player})"
         },
         {
             "trigger": "entity.get_game_rules",
@@ -465,13 +459,13 @@
         {
             "trigger": "globals.chokedcommands",
             "kind": "function",
-            "details": "Returns the current number of commands that are being held back.",
+            "details": "Returns the number of choked commands, i.e. the number of commands that haven't yet been sent to the server.",
             "contents": "globals.chokedcommands()"
         },
         {
             "trigger": "globals.commandack",
             "kind": "function",
-            "details": "Returns the number of the command the server last acknowledged.",
+            "details": "Returns the command number of the most recent server-acknowledged command.",
             "contents": "globals.commandack()"
         },
         {
@@ -513,7 +507,7 @@
         {
             "trigger": "globals.oldcommandack",
             "kind": "function",
-            "details": "Returns the previous server acknowledged command number.",
+            "details": "Returns the command number of the previous server-acknowledged command.",
             "contents": "globals.oldcommandack()"
         },
         {
@@ -535,16 +529,58 @@
             "contents": "globals.tickinterval()"
         },
         {
+            "trigger": "json.decode_invalid_numbers",
+            "kind": "function",
+            "details": "Lua CJSON may generate an error when trying to decode numbers not supported by the JSON specification. Invalid numbers are defined as: infinity, not-a-number (NaN) or hexadecimal. The current value wil always be returned.",
+            "contents": "json.decode_invalid_numbers(${1:setting})"
+        },
+        {
+            "trigger": "json.decode_max_depth",
+            "kind": "function",
+            "details": "Lua CJSON will generate an error when parsing deeply nested JSON once the maximum array/object depth has been exceeded. This check prevents unnecessarily complicated JSON from slowing down the application, or crashing the application due to lack of process stack space.",
+            "contents": "json.decode_max_depth(${1:setting})"
+        },
+        {
+            "trigger": "json.encode_invalid_numbers",
+            "kind": "function",
+            "details": "Lua CJSON may generate an error when encoding floating point numbers not supported by the JSON specification (invalid numbers): infinity, not-a-number (NaN)",
+            "contents": "json.encode_invalid_numbers(${1:setting})"
+        },
+        {
+            "trigger": "json.encode_keep_buffer",
+            "kind": "function",
+            "details": "Lua CJSON can reuse the JSON encoding buffer to improve performance.",
+            "contents": "json.encode_keep_buffer(${1:setting})"
+        },
+        {
+            "trigger": "json.encode_max_depth",
+            "kind": "function",
+            "details": "Once the maximum table depth has been exceeded Lua CJSON will generate an error. This prevents a deeply nested or recursive data structure from crashing the application.",
+            "contents": "json.encode_max_depth(${1:depth})"
+        },
+        {
+            "trigger": "json.encode_number_precision",
+            "kind": "function",
+            "details": "The amount of significant digits returned by Lua CJSON when encoding numbers can be changed to balance accuracy versus performance. For data structures containing many numbers, setting cjson.encode_number_precision to a smaller integer, for example 3, can improve encoding performance by up to 50%.",
+            "contents": "json.encode_number_precision(${1:precision})"
+        },
+        {
+            "trigger": "json.encode_sparse_array",
+            "kind": "function",
+            "details": "Lua CJSON classifies a Lua table into one of three kinds when encoding a JSON array. This is determined by the number of values missing from the Lua array as follows:",
+            "contents": "json.encode_sparse_array(${1:convert}, ${2:ratio}, ${3:safe})"
+        },
+        {
             "trigger": "json.parse",
             "kind": "function",
-            "details": "Will deserialise any UTF-8 JSON string into a Lua value or table.",
+            "details": "json.parse will deserialise any UTF-8 JSON string into a Lua value or table. null will be converted to a NULL lightuserdata value. This can be compared with cjson.null for convenience.",
             "contents": "json.parse(${1:json_text})"
         },
         {
             "trigger": "json.stringify",
             "kind": "function",
             "details": "Will serialise a Lua value into a string containing the JSON representation.",
-            "contents": "json.stringify(${1:data})"
+            "contents": "json.stringify(${1:value})"
         },
         {
             "trigger": "material_object:alpha_modulate",
@@ -555,13 +591,13 @@
         {
             "trigger": "materialsystem.arms_material",
             "kind": "function",
-            "details": "Returns the players hand cham material as an object.",
+            "details": "Returns a reference to the arms material when 'Viewmodel arms' is enabled",
             "contents": "materialsystem.arms_material()"
         },
         {
             "trigger": "materialsystem.chams_material",
             "kind": "function",
-            "details": "Returns the players cham material as an object.",
+            "details": "Returns a reference to the player chams material",
             "contents": "materialsystem.chams_material()"
         },
         {
@@ -573,20 +609,20 @@
         {
             "trigger": "materialsystem.find_material",
             "kind": "function",
-            "details": "Returns a material object for the specified material.",
-            "contents": "materialsystem.find_material(${1:material})"
+            "details": "Returns a reference to the material",
+            "contents": "materialsystem.find_material(${1:path}, ${2:force_load})"
         },
         {
             "trigger": "materialsystem.find_materials",
             "kind": "function",
-            "details": "Returns all material objects that contain the specified material.",
-            "contents": "materialsystem.find_materials(${1:materials})"
+            "details": "Returns a table of references to materials that have partial_path in their name",
+            "contents": "materialsystem.find_materials(${1:partial_path}, ${2:force_load})"
         },
         {
             "trigger": "materialsystem.find_texture",
             "kind": "function",
-            "details": "Returns a texture object for the specified material.",
-            "contents": "materialsystem.find_texture(${1:material})"
+            "details": "Returns a reference to the texture that can be used with set_shader_param",
+            "contents": "materialsystem.find_texture(${1:path})"
         },
         {
             "trigger": "material_object:get_material_var_flag",
@@ -597,8 +633,14 @@
         {
             "trigger": "materialsystem.get_model_materials",
             "kind": "function",
-            "details": "Returns all material objects for a specified entity.",
-            "contents": "materialsystem.get_model_materials(${1:ent})"
+            "details": "Returns a table of references to materials used by the entity",
+            "contents": "materialsystem.get_model_materials(${1:entindex})"
+        },
+        {
+            "trigger": "materialsystem.get_name",
+            "kind": "function",
+            "details": "Returns name of the material",
+            "contents": "materialsystem.get_name()"
         },
         {
             "trigger": "material_object:get_shader_param",
@@ -633,26 +675,22 @@
         {
             "trigger": "panorama.loadstring",
             "kind": "function",
-            "details": "This function behaves similar to lua's loadstring but executes JS code instead. It compiles the given chunk string of JS and returns a function to call it. Avoid generating JS code on-the-fly, instead return a table of functions, which you can then call in Lua. Arguments can be passed from Lua to JS functions.",
-            "contents": "panorama.loadstring(${1:js_code}, ${2:root_panel})"
+            "contents": "panorama.loadstring(${1:js_code}, ${2:panel})"
         },
         {
             "trigger": "panorama.open",
             "kind": "function",
-            "details": "Returns a JS context table that lets you call vanilla JS and panorama functions. Avoid calling this in event callbacks, instead, call it once and store its return value in a function.",
-            "contents": "panorama.open(${1:root_panel})"
+            "contents": "panorama.open(${1:panel})"
         },
         {
             "trigger": "plist.get",
             "kind": "function",
-            "details": "Get the previously stored by plist.set variable at any entity.",
-            "contents": "plist.get(${1:entindex}, ${2:variable_name})"
+            "contents": "plist.get(${1:entindex}, ${2:field})"
         },
         {
             "trigger": "plist.set",
             "kind": "function",
-            "details": "Set the special variable to any entity.",
-            "contents": "plist.set(${1:entindex}, ${2:variable_name}, ${3:value})"
+            "contents": "plist.set(${1:entindex}, ${2:field}, ${3:value})"
         },
         {
             "trigger": "renderer.circle",
@@ -730,7 +768,7 @@
             "trigger": "renderer.texture",
             "kind": "function",
             "details": "Draws a texture from the texture id created from load_rgba, load_png, load_jpg or load_svg",
-            "contents": "renderer.texture(${1:id}, ${2:x}, ${3:y}, ${4:w}, ${5:h}, ${6:r}, ${7:g}, ${8:b}, ${9:a}, ${10:flags})"
+            "contents": "renderer.texture(${1:id}, ${2:x}, ${3:y}, ${4:w}, ${5:h}, ${6:r}, ${7:g}, ${8:b}, ${9:a}, ${10:mode})"
         },
         {
             "trigger": "renderer.triangle",
@@ -777,7 +815,7 @@
         {
             "trigger": "ui.name",
             "kind": "function",
-            "details": "Returns the name of the menu item reference passed to it. Throws an error on failure.",
+            "details": "Returns the display name",
             "contents": "ui.name(${1:item})"
         },
         {
@@ -808,7 +846,7 @@
             "trigger": "ui.new_hotkey",
             "kind": "function",
             "details": "Returns a special value that can be passed to ui.get to see if the hotkey is pressed, or throws an error on failure.",
-            "contents": "ui.new_hotkey(${1:tab}, ${2:container}, ${3:name}, ${4:inline})"
+            "contents": "ui.new_hotkey(${1:tab}, ${2:container}, ${3:name}, ${4:inline}, ${5:default_hotkey})"
         },
         {
             "trigger": "ui.new_label",
@@ -819,8 +857,8 @@
         {
             "trigger": "ui.new_listbox",
             "kind": "function",
-            "details": "Returns a special value that can be passed to ui.get and ui.set, or throws an error on failure.",
-            "contents": "ui.new_listbox(${1:tab}, ${2:container}, ${3:name}, ${4:...})"
+            "details": "Throws an error on failure. Returns a special value that can be used with ui.get. Calling ui.get on a listbox will return the zero-based index of the currently selected string.",
+            "contents": "ui.new_listbox(${1:tab}, ${2:container}, ${3:name}, ${4:items})"
         },
         {
             "trigger": "ui.new_multiselect",
@@ -855,7 +893,7 @@
         {
             "trigger": "ui.set",
             "kind": "function",
-            "details": "For checkboxes, pass true or false. For a slider, pass a number that is within the slider's minimum/maximum values. For a combobox, pass a string value. For a multiselect combobox, pass zero or more strings. For referenced buttons, param is ignored and the button's callback is invoked. For color pickers, pass the arguments r, g, b, a.",
+            "details": "For checkboxes, pass true or false. For a slider, pass a number that is within the slider's minimum/maximum values. For a combobox, pass a string value. For a multiselect combobox, pass zero or more strings. For referenced buttons, value is ignored and the button's callback is invoked. For color pickers, pass the arguments r, g, b, a.",
             "contents": "ui.set(${1:item}, ${2:value}, ${3:...})"
         },
         {
@@ -871,10 +909,124 @@
             "contents": "ui.set_visible(${1:item}, ${2:visible})"
         },
         {
-            "trigger": "ui.update",
+            "trigger": "vector_object:angles",
             "kind": "function",
-            "details": "Change current values for e.g. in listbox to passed.",
-            "contents": "ui.update(${1:item}, ${2:...})"
+            "details": "Converts the vector to an angle and returns the pitch, yaw and roll",
+            "contents": "vector_object:angles()"
+        },
+        {
+            "trigger": "vector_object:dist2d",
+            "kind": "function",
+            "details": "Returns the cross product / vector product of itself and another vector",
+            "contents": "vector_object:dist2d(${1:other})"
+        },
+        {
+            "trigger": "vector_object:dist",
+            "kind": "function",
+            "details": "Returns the 3d distance to another vector",
+            "contents": "vector_object:dist(${1:other})"
+        },
+        {
+            "trigger": "vector_object:dist",
+            "kind": "function",
+            "details": "Returns the 2d distance to another vector",
+            "contents": "vector_object:dist(${1:other})"
+        },
+        {
+            "trigger": "vector_object:dot",
+            "kind": "function",
+            "details": "Returns the dot product of the vector",
+            "contents": "vector_object:dot()"
+        },
+        {
+            "trigger": "vector_object:init",
+            "kind": "function",
+            "details": "Overwrites the X, Y and Z coordinates of the vector object, returning itself",
+            "contents": "vector_object:init(${1:x}, ${2:y}, ${3:z})"
+        },
+        {
+            "trigger": "vector_object:init_from_angles",
+            "kind": "function",
+            "details": "Converts the pitch, yaw and roll passed to a forward vector and overwrites the X, Y and Z coordinates with that. Returns itself",
+            "contents": "vector_object:init_from_angles(${1:pitch}, ${2:yaw}, ${3:roll})"
+        },
+        {
+            "trigger": "vector_object:length",
+            "kind": "function",
+            "details": "Returns the length (magnitude)",
+            "contents": "vector_object:length()"
+        },
+        {
+            "trigger": "vector_object:length2d",
+            "kind": "function",
+            "details": "Returns the 2d length (X and Y components)",
+            "contents": "vector_object:length2d()"
+        },
+        {
+            "trigger": "vector_object:length2dsqr",
+            "kind": "function",
+            "details": "Returns the squared 2d length (X and Y components, faster than :length2d)",
+            "contents": "vector_object:length2dsqr()"
+        },
+        {
+            "trigger": "vector_object:lengthsqr",
+            "kind": "function",
+            "details": "Returns the squared length (faster than :length)",
+            "contents": "vector_object:lengthsqr()"
+        },
+        {
+            "trigger": "vector_object:lerp",
+            "kind": "function",
+            "details": "Interpolates by the specified percentage between the 2 vectors.",
+            "contents": "vector_object:lerp(${1:to}, ${2:percentage})"
+        },
+        {
+            "trigger": "vector_object:normalize",
+            "kind": "function",
+            "details": "Normalizes the vector, dividing it by it's own length (resulting in a unit vector with length = 1)",
+            "contents": "vector_object:normalize()"
+        },
+        {
+            "trigger": "vector_object:normalized",
+            "kind": "function",
+            "details": "Returns a new unit vector, divided it by it's own length",
+            "contents": "vector_object:normalized()"
+        },
+        {
+            "trigger": "vector_object:scale",
+            "kind": "function",
+            "details": "Scales the vector by the specified value.",
+            "contents": "vector_object:scale(${1:scalar})"
+        },
+        {
+            "trigger": "vector_object:scaled",
+            "kind": "function",
+            "details": "Returns a new vector, scaled by the specified value.",
+            "contents": "vector_object:scaled(${1:scalar})"
+        },
+        {
+            "trigger": "vector_object:to",
+            "kind": "function",
+            "details": "Returns the forward vector from itself to another vector",
+            "contents": "vector_object:to(${1:other})"
+        },
+        {
+            "trigger": "vector_object:unpack",
+            "kind": "function",
+            "details": "Returns the X, Y and Z coordinate of the vector object. They can also be accessed by vec.x, vec.y, etc",
+            "contents": "vector_object:unpack()"
+        },
+        {
+            "trigger": "vector",
+            "kind": "function",
+            "details": "Creates a new vector object. Please note that you need to load the built-in vector library with require \"vector\"",
+            "contents": "vector(${1:x}, ${2:y}, ${3:z})"
+        },
+        {
+            "trigger": "vector_object:vectors",
+            "kind": "function",
+            "details": "Returns the right and up vector of a forward vector",
+            "contents": "vector_object:vectors()"
         }
     ]
 }
